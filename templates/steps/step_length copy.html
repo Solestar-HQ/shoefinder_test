@@ -1,0 +1,69 @@
+{% load static %}
+{% load compress %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+<ul class="tabs">
+    <li class="active">
+        <div>1</div>
+        <span class="skewed-rectangle"></span>
+    </li>
+    <li>
+        <div>2</div>
+        <span class="skewed-rectangle"></span>
+    </li>
+    <li>
+        <div>3</div>
+        <span class="skewed-rectangle"></span>
+    </li>
+</ul>
+<div class="illustrations">
+    <div class="wrapper">
+        <img src="{% static 'svg/length.svg' %}">
+    </div>
+</div>
+<form class="controls">
+    <div class="wrapper">
+        {% csrf_token %}
+        <div style="width: 2.5rem;"></div>
+        <div class="input-wrapper">
+            <input 
+                name="length"
+                oninput="javascript: if (this.value.length > 4) this.value = this.value.slice(0, 4);"
+                type="number" 
+                placeholder="28.3"
+                value="28.3" 
+                max="99"
+            />
+            <span class="cm">cm</span>
+        </div>
+        <img 
+            eager
+            src="{% static 'svg/btn_next.svg' %}" 
+            hx-post="{% url 'shoe_finder' step='width' %}"
+            hx-include="input[name=length]"
+            hx-push-url="true"
+            hx-trigger="click"
+            hx-target=".shoe-finder"
+            hx-swap="innerHTML"
+        />
+    </div>
+</form>
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+<div class="info">
+    <h3>
+        Determining your foot length:
+    </h3>
+    <p>
+        To determine your foot length, find a spot on a wall with a flat surface. Place a ruler or tape measure with the '0cm' mark flush against the wall. Now stand with your heel barefoot against the wall so that it corresponds to the '0' mark on the tape measure or ruler. Without moving your foot, read the longest distance on the tape measure, which corresponds to the longest toe. Now you have determined the length of your foot.
+    </p>
+    <p>
+        Measure the right and the left foot. If the result is different, please note the larger value in cm.
+    </p>
+</div>

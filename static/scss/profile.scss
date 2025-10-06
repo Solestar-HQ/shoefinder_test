@@ -1,0 +1,60 @@
+$black:	#181a16;	
+$white:	#f2f2f0;
+$red: #d92b31;
+$gray:	#91918f;
+
+main {
+    h1 {
+        background-color: $black;
+        border-top: 1px solid #fff;
+        color: $white;
+        text-align: center;
+        padding: 1rem 0;
+    }
+
+    ul {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        list-style: none;
+        padding: 0;
+        max-width: 510px;
+        margin: 0 auto;
+
+        li {
+            background-color: $white;
+            cursor: pointer;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            min-width: 183px;
+            margin: 0rem 0.5rem 0.5rem 0.5rem;
+
+            &:first-of-type {
+                margin-top: 0.5rem;
+            }
+
+            &:hover {
+                box-shadow: 0 0 0 1px $black;
+            }
+
+            a {
+                color: $black;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                text-decoration: none;
+                height: 51px;
+                margin-left: 0.5rem;
+                width: 100%;
+
+                svg, svg use {
+                    height: 1.25rem;
+                    margin-right: 0.5rem;
+                    fill: $black;
+                    width: 1.25rem;
+                }
+            }
+        }
+    }
+}

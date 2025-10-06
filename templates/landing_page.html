@@ -1,0 +1,37 @@
+{% extends template %}
+
+{% load static %}
+{% load compress %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block links %}
+{% compress css %}
+<link type="text/x-scss" href="{% static 'scss/landing_page.scss' %}" rel="stylesheet" media="screen">
+{% endcompress %}
+
+<link rel="preload" as="image" href="{% static 'hero.jpg' %}" imagesrcset="{% static 'hero.jpg' %}">
+{% endblock %}
+
+{% block main %}
+    <section>
+        <div class="hero">
+            <img src="{% static 'hero.jpg' %}"/>
+        </div>
+        <div class="content">
+            <h2>
+                Find the perfect cycling shoe for you
+            </h2>
+            <p>
+                Every foot is different and also every cycling shoe manufacturer has its own Lesitenform, which also differ in part from model to model. In addition, there are different size specifications. With the SOLESTAR cycling shoe navigator you get a competent recommendation on the most suitable cycling shoes for you. We have measured numerous cycling shoes exactly and developed a special calculation method with which we can tell you exactly which cycling shoe models in which size would be the most suitable for you from our point of view.
+            </p>
+            <div class="wrapper">
+                <button id="get-started-btn" >
+                    <a href="{% url 'shoe_finder' step='length' %}">START SHOE FINDER</a>
+                </button>
+            </div>
+        </div>
+    </section>
+{% endblock %}

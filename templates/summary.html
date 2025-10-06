@@ -1,0 +1,73 @@
+{% extends template %}
+{% load static %}
+{% load compress %}
+
+{% block links %}
+<link rel="preload" as="style" href="{% static 'scss/summary.scss' %}">
+    {% compress css %}
+    <link type="text/x-scss" href="{% static 'scss/summary.scss' %}" rel="stylesheet" media="screen">
+    <link type="text/x-scss" href="{% static 'scss/shoe-finder.scss' %}" rel="stylesheet" media="screen">
+    {% endcompress %}
+{% endblock %}
+
+{% block main %}
+<div class="info">
+    <h2>
+        You did it! 
+    </h2>
+    <p>
+        Finally, make sure that you register an account to save your measurements. 
+        <!-- Just provide your email down below and press the register button. You will quickly recieve an email with a link to confirm your registration.  -->
+    </p>
+    <p>
+        This way you will always be able to come back and see all your matching shoes without needing to repeat the measuring procedure.
+    </p>
+    <div class="subscription" x-data="{ checked: false }">
+        <h4>
+            Save your measurements.
+        </h4>
+        <form 
+            method="POST" 
+            action="{% url 'account_signup' %}"
+            class="email-wrapper" 
+            x-data="{ showPasswordModal: false }"
+        >
+            {% csrf_token %}
+            <input 
+                type="email" 
+                name="email" 
+                placeholder="E-mail address" 
+                autocomplete="email" 
+                required="" 
+                id="id_email"
+                x-show="!showPasswordModal"
+            >
+            <div class="password-modal" x-show="showPasswordModal">
+                <h4>Choose your password</h4>
+                <input type="password" name="password1" placeholder="Password" autocomplete="new-password" required="" id="id_password1"> 
+                <input type="password" name="password2" placeholder="Password (again)" autocomplete="new-password" required="" id="id_password2">
+                <button 
+                    type="submit" 
+                    name="button"
+                >
+                    Save
+                </button>
+            </div>
+            <input type="hidden" name="subscribed" id="id_subscribed" :value="checked ? 'on' : ''">
+            <button 
+                type="button" 
+                name="button" 
+                x-on:click="showPasswordModal = true"
+                x-show="!showPasswordModal"
+            >
+                Register
+            </button>
+            <!-- <a href="/accounts/login/">Already registered?</a> -->
+        </form>
+    </div>
+</div>
+<div id="registration-confirmation"></div>
+<div class="show-results-btn-wrapper">
+    <a id="show-results-btn" href="{% url 'results' %}">Show results</a> 
+</div>
+{% endblock %}

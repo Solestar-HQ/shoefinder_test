@@ -1,0 +1,16 @@
+.select2-container--default:nth-of-type(2) {
+     display: none !important;
+}
+
+.select2-selection.select2-selection--single {
+     padding-top: .46875rem !important;
+}
+
+
+.select2-selection.select2-selection--single:first-letter {
+     text-transform: capitalize;
+}
+
+.select2-results__option:first-letter {
+     text-transform: capitalize;
+}

@@ -1,0 +1,354 @@
+{% extends template %}
+
+{% load static %}
+{% load compress %}
+{% load filterurl %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block links %}
+<meta http-equiv="Pragma" content="no-cache">
+
+<link rel="preload" as="style" type="text/x-scss" href="{% static 'scss/shoe-finder.scss' %}" media="screen">
+<!-- <link rel="preload" as="style" href="{% static 'scss/summary.scss' %}"> -->
+
+{% compress css %}
+<link type="text/x-scss" href="{% static 'scss/shoe-finder.scss' %}" rel="stylesheet" media="screen">
+<link type="text/x-scss" href="{% static 'scss/summary.scss' %}" rel="stylesheet" media="screen">
+<link type="text/x-scss" href="{% static 'scss/results.scss' %}" rel="stylesheet" media="screen">
+<link type="text/x-scss" href="{% static 'scss/register.scss' %}" rel="stylesheet" media="screen">
+{% endcompress %}
+
+<link rel="preload" as="image" href="{% static 'svg/length.svg' %}" imagesrcset="{% static 'svg/length.svg' %}">
+<link rel="preload" as="image" href="{% static 'svg/width.svg' %}" imagesrcset="{% static 'svg/width.svg' %}">
+<link rel="preload" as="image" href="{% static 'svg/circumference.svg' %}" imagesrcset="{% static 'svg/circumference.svg' %}">
+<!--<link rel="preload" as="image" href="{% static 'svg/length_02.svg' %}" imagesrcset="{% static 'svg/length.svg' %}">-->
+<!--<link rel="preload" as="image" href="{% static 'svg/width_02.svg' %}" imagesrcset="{% static 'svg/width.svg' %}">-->
+<!--<link rel="preload" as="image" href="{% static 'svg/circumference_02.svg' %}" imagesrcset="{% static 'svg/circumference.svg' %}">-->
+
+<!-- <link rel="preload" as="image" href="{% static 'svg/length_small.svg' %}" imagesrcset="{% static 'svg/length_small.svg' %}">
+<link rel="preload" as="image" href="{% static 'svg/width_small.svg' %}" imagesrcset="{% static 'svg/width_small.svg' %}">
+<link rel="preload" as="image" href="{% static 'svg/circumference_small.svg' %}" imagesrcset="{% static 'svg/circumference_small.svg' %}"> -->
+
+<link rel="preload" as="image" href="{% static 'svg/btn_previous.svg' %}" imagesrcset="{% static 'svg/btn_previous.svg' %}">
+<link rel="preload" as="image" href="{% static 'svg/btn_next.svg' %}" imagesrcset="{% static 'svg/btn_next.svg' %}">
+{% endblock %}
+
+{% block main %}
+<section
+    class="shoe-finder"
+    x-data="{
+        step_n: {{ step_n }},
+        foot: {
+            length: '',
+            width: '',
+            circumference: ''
+        }
+    }">
+    {% if messages %}
+    {% endif %}
+    <div class="mobile">
+    {% include step_html %}
+    </div>
+    <div class="desktop" style="display: none;">
+        {% if step_n != 4 %}
+        <ul class="tabs">
+            {% if step_n == 1 %}
+            <li
+                class="active"
+                hx-get="{% url 'shoe_finder' step='length' %}"
+                hx-push-url="true"
+                hx-trigger="click"
+                hx-target=".shoe-finder"
+            >
+            {% elif step_n > 1 and step_n  < 4%}
+            <li
+                class="finished"
+                hx-get="{% url 'shoe_finder' step='length' %}"
+                hx-push-url="true"
+                hx-trigger="click"
+                hx-target=".shoe-finder"
+            >
+            {% elif step_n == 4 %}
+            <li
+                class="finished last-step"
+                hx-get="{% url 'shoe_finder' step='length' %}"
+                hx-push-url="true"
+                hx-trigger="click"
+                hx-target=".shoe-finder"
+            >
+            {% else %}
+            <li
+                hx-get="{% url 'shoe_finder' step='length' %}"
+                hx-push-url="true"
+                hx-trigger="click"
+                hx-target=".shoe-finder"
+            >
+            {% endif %}
+                <div><div class="step-text">Step </div>1</div>
+                <span class="skewed-rectangle"></span>
+            </li>
+
+            {% if step_n == 2 %}
+            <li
+                class="active"
+                hx-get="{% url 'shoe_finder' step='width' %}"
+                hx-push-url="true"
+                hx-trigger="click"
+                hx-target=".shoe-finder"
+            >
+            {% elif step_n > 2 and step_n < 4 %}
+            <li
+                class="finished"
+                hx-get="{% url 'shoe_finder' step='width' %}"
+                hx-push-url="true"
+                hx-trigger="click"
+                hx-target=".shoe-finder"
+            >
+            {% elif step_n == 4%}
+            <li
+                class="finished last-step"
+                hx-get="{% url 'shoe_finder' step='width' %}"
+                hx-push-url="true"
+                hx-trigger="click"
+                hx-target=".shoe-finder"
+            >
+            {% else %}
+            <li
+                hx-get="{% url 'shoe_finder' step='width' %}"
+                hx-push-url="true"
+                hx-trigger="click"
+                hx-target=".shoe-finder"
+            >
+            {% endif %}
+                <div><span class="step-text">Step </span>2</div>
+                <span class="skewed-rectangle"></span>
+            </li>
+
+            {% if step_n == 3 %}
+            <li
+                class="active"
+                hx-get="{% url 'shoe_finder' step='circumference' %}"
+                hx-push-url="true"
+                hx-trigger="click"
+                hx-target=".shoe-finder"
+            >
+            {% elif step_n == 4 %}
+            <li
+                class="finished last-step"
+                hx-get="{% url 'shoe_finder' step='circumference' %}"
+                hx-push-url="true"
+                hx-trigger="click"
+                hx-target=".shoe-finder"
+            >
+            {% else %}
+            <li
+                hx-get="{% url 'shoe_finder' step='circumference' %}"
+                hx-push-url="true"
+                hx-trigger="click"
+                hx-target=".shoe-finder"
+            >
+            {% endif %}
+                <div><span class="step-text">Step </span>3</div>
+                <span class="skewed-rectangle"></span>
+            </li>
+        </ul>
+        {% endif %}
+        <div class="info">
+            {% if step_n == 1 %}
+            {% include './steps/step_length_info.html' %}
+            {% elif step_n == 2 %}
+            {% include './steps/step_width_info.html' %}
+            {% elif step_n == 3 %}
+            {% include './steps/step_circumference_info.html' %}
+            {% else %}
+            {% include './steps/step_summary_info.html' %}
+            {% endif %}
+        </div>
+        {% if step_n != 4 %}
+        <div class="illustrations">
+            <div class="wrapper">
+                {% if step_n == 1 %}
+                <img class="active length" src="{% static 'svg/length.svg' %}">
+                {% elif step_n > 1 and step_n < 4 %}
+                <img class="finished length"  src="{% static 'svg/length.svg' %}">
+                {% elif step_n == 4 %}
+                <img class="active length"  src="{% static 'svg/length.svg' %}">
+                {% endif %}
+
+                {% if step_n == 2 %}
+                <img class="active width" src="{% static 'svg/width.svg' %}">
+                {% elif step_n > 2 and step_n < 4 %}
+                <img class="finished width"  src="{% static 'svg/width.svg' %}">
+                {% elif step_n == 4 %}
+                <img class="active width"  src="{% static 'svg/width.svg' %}">
+                {% endif %}
+
+                {% if step_n == 3 %}
+                <img class="active circumference" src="{% static 'svg/circumference.svg' %}">
+                {% elif step_n > 3 and step_n < 4 %}
+                <img class="finished circumference"  src="{% static 'svg/circumference.svg' %}">
+                {% elif step_n == 4 %}
+                <img class="active circumference"  src="{% static 'svg/circumference.svg' %}">
+                {% endif %}
+            </div>
+        </div>
+        <form class="controls" x-on:submit.prevent>
+            <div class="wrapper">
+                {% csrf_token %}
+                {% if step != 'length' and step != 'summary' %}
+                <img
+                    src="{% static 'svg/btn_previous.svg' %}"
+                    hx-get="{% url 'shoe_finder' step=prev_step %}"
+                    hx-include="input[name={{ step }}]"
+                    hx-trigger="click"
+                    hx-target=".shoe-finder"
+                    hx-swap="innerHTML"
+                />
+                {% else %}
+                <div style="width: 40px;"></div>
+                {% endif %}
+                <div
+                    class="inputs"
+                    x-data="{
+                        foot: {% get_foot request.session %},
+                        step: '{{ step }}'
+                    }"
+                >
+                    {% if step_n > 1 %}
+                    <div class="value pseudo">
+                        <label>My foot length</label>
+                        <div>{{ foot.length }} <span>cm</span></div>
+                    </div>
+                    {% endif %}
+                    {% if step_n > 2 %}
+                    <div class="value pseudo">
+                        <label>My foot width</label>
+                        <div>{{ foot.width }} <span>cm</span></div>
+                    </div>
+                    {% endif %}
+                    {% if step_n > 3 %}
+                    <div class="value pseudo">
+                        <label>My instep circumference</label>
+                        <div>{{ foot.circumference }} <span>cm</span></div>
+                    </div>
+                    {% endif %}
+                    {% if step != 'summary' %}
+                    <div class="value input" x-data="">
+                        <label>
+                            {% if step_n == 1 %}
+                            My foot length
+                            {% elif step_n == 2 %}
+                            My foot width
+                            {% elif step_n == 3 %}
+                            My foot circumference
+                            {% endif %}
+                        </label>
+                        <div
+                            class="input-wrapper"
+                            x-data="{ inputValue: parseFloat(foot[step]).toFixed(1) }"
+                        >
+                            <input
+                                name="{{ step }}"
+                                x-model="inputValue"
+                                type="number"
+                                type="text"
+                                step="0.1"
+                                autofocus
+                                min="1"
+                                @keydown.enter="$refs.next.click()"
+                                x-init="$watch('inputValue', (value) => {
+                                    if (value < 0) value = 0;
+                                    if (value.length > 4) value = value.slice(0, 4);
+                                    if (value < 1) {
+                                        value = String(value).slice(value.length - 1, value.length);
+                                    }
+                                    if (value > 99 && value.length < 4) {
+                                        value = parseFloat(
+                                            String(value).slice(0, 2) + '.' + String(value).slice(2, 3)
+                                        );
+                                    } else if (value > 99) {
+                                        value = parseFloat(
+                                            String(value).slice(1, 3) + '.' + String(value).slice(3, 4)
+                                        );
+                                    } else if (value < 99 && value.length < 4) {
+                                        if (String(value).slice(0, 1) == 0) {
+                                            value = parseFloat(String(value).slice(1, value.length));
+                                        }
+                                    } else if (value < 10 && value.length > 3) {
+                                        value = parseFloat(
+                                            String(value).slice(0, 3)
+                                        );
+                                    }
+                                    inputValue = value;
+                                    foot[step] = value;
+                                    console.log(foot[step]);
+                                })
+                                "
+                            />
+                            <span class="cm">cm</span>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                {% if step_n == 1 %}
+                <img
+                    eager
+		    id="next-step-1"
+                    x-ref="next"
+                    src="{% static 'svg/btn_next.svg' %}"
+                    hx-post="{% url 'shoe_finder' step=next_step %}"
+                    hx-push-url="true"
+                    hx-include="input[name={{ step }}]"
+                    hx-trigger="click"
+                    hx-target=".shoe-finder"
+                    hx-swap="outerHTML"
+                />
+                {% elif step_n == 2 %}
+                <img
+                    eager
+		    id="next-step-2"
+                    x-ref="next"
+                    src="{% static 'svg/btn_next.svg' %}"
+                    hx-post="{% url 'shoe_finder' step=next_step %}"
+                    hx-push-url="true"
+                    hx-include="input[name={{ step }}]"
+                    hx-trigger="click"
+                    hx-target=".shoe-finder"
+                    hx-swap="outerHTML"
+                />
+                {% else %}
+                <img
+                    eager
+		    id="next-step-3"
+                    x-ref="next"
+                    src="{% static 'svg/btn_next.svg' %}"
+                    hx-post="{% url 'summary' %}"
+                    hx-push-url="true"
+                    hx-include="input[name={{ step }}]"
+                    hx-trigger="click"
+                    hx-target="section"
+                    hx-swap="outerHTML"
+                />
+                {% endif %}
+            </div>
+        </form>
+        <ul class="messages">
+            {% for message in messages %}
+            {% if message.tags == 'shoe_finder error' %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endif %}
+            {% endfor %}
+        </ul>
+        {% endif %}
+        <div class="show-results-btn-wrapper">
+            {% if step == 'summary' %}
+            {% csrf_token %}
+            <a id="show-results-btn" href="{% url 'results' %}">Show results</a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

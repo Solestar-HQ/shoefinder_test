@@ -1,0 +1,61 @@
+{% load static %}
+{% load compress %}
+
+{% for group in shoe_filter.form %}
+<details class="{{ group.name }}" x-data="{ group_open: false }">
+    <summary x-on:click="group_open =! group_open">
+        <img 
+            src="{% static 'svg/btn_view_collapse.svg' %}"
+            :class="group_open ? 'hide' : 'show'"
+        />
+        <img 
+            src="{% static 'svg/btn_view_expand.svg' %}"
+            class="hide"
+            :class="group_open ? 'show' : 'hide'"
+        />
+        <h3>{{ group.label }}</h3>
+    </summary>
+    {% for field in group %}
+        {% if field.data.type == 'checkbox' %}
+            {% if field.data.selected == True %}
+            <div 
+                class="checkbox-wrapper" 
+                x-data="{ checked: true }"
+            >
+            {% else %}
+            <div 
+                class="checkbox-wrapper" 
+                x-data="{ checked: false }"
+            >
+            {% endif %}
+                <div class="checkbox" x-on:click="checked = ! checked">
+                    <img
+                        src="{% static 'svg/checkbox_off.svg' %}" 
+                        :class="checked ? 'hide' : ''"
+                    />
+                    <img 
+                        class="checked"
+                        src="{% static 'svg/checkbox_on.svg' %}" 
+                        :class="checked ? '' : 'hide'" 
+                    />
+                </div>
+                <input 
+                    id="{{ field.id_for_label }}"
+                    class="hidden-checkbox"
+                    type="checkbox"
+                    name="{{ group.name }}"
+                    value="{{ field.data.value }}"
+                    :checked="checked"
+                />
+                <label 
+                    for="{{ field.id_for_label }}"
+                >
+                    {{ field.choice_label }}
+                </label>
+            </div>
+        {% else%}
+            {{ field }}
+        {% endif %}
+    {% endfor %}
+</details>
+{% endfor %}

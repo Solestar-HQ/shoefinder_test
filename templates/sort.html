@@ -1,0 +1,44 @@
+{% load static %}
+{% load compress %}
+{% load filterurl %}
+
+<div 
+    class="select-wrapper" 
+    x-data="{ 
+        saveSort: false, 
+        sortOpen: false,
+        sortSet: window.location.href.substring(
+            window.location.href.indexOf('sort') + 5
+        ),
+        setSort: '{% sort_set form=shoe_filter.form %}'
+    }
+    "
+>
+    <div 
+        class="sort-wrapper" 
+        x-on:click="sortOpen =! sortOpen" 
+        :class="sortOpen ? 'open' : ''"
+    >
+    {% for field in shoe_filter.form.sort %}
+        {% if forloop.counter == 1 %}
+        <a 
+            href="{% generate_filter_url form=shoe_filter.form %}sort={{ field.data.value }}"
+            :class="setSort.localeCompare(
+                '{{ field.data.value }}', undefined, { sensitivity: 'accent' }) == 0 ? 'show' : ''"
+        >
+            Sort by
+            <img src="{% static 'svg/sort_arrow.svg' %}" />
+        </a>
+        {% else %}
+        <a 
+            href="{% generate_filter_url form=shoe_filter.form %}sort={{ field.data.value }}"
+            :class="setSort.localeCompare(
+                '{{ field.data.value }}', undefined, { sensitivity: 'accent' }) == 0 ? 'show' : ''"
+        >
+            {{ field.data.label }} 
+            <img src="{% static 'svg/sort_arrow.svg' %}" />
+        </a>
+        {% endif %}
+    {% endfor %}
+    </div>
+</div>

@@ -1,0 +1,201 @@
+{% extends template %}
+
+{% load static %}
+{% load compress %}
+{% load images %}
+{% load filterurl %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block links %}
+<link rel="preload" as="style" href="{% static 'scss/results.scss' %}">
+{% compress css %}
+
+<link type="text/x-scss" href="{% static 'scss/results.scss' %}" rel="stylesheet" media="screen"><link type="text/x-scss" href="{% static 'scss/register.scss' %}" rel="stylesheet" media="screen">
+{% endcompress %}
+<link rel="preload" as="image" href="{% static 'svg/checkbox_on.svg' %}" imagesrcset="{% static 'svg/checkbox_on.svg' %}">
+<link rel="preload" as="image" href="{% static 'svg/checkbox_off.svg' %}" imagesrcset="{% static 'svg/checkbox_off.svg' %}">
+<link rel="preload" as="image" href="{% static 'svg/icon_list.svg' %}" imagesrcset="{% static 'svg/icon_list.svg' %}">
+<link rel="preload" as="image" href="{% static 'svg/btn_clear_filter.svg' %}" imagesrcset="{% static 'svg/btn_clear_filter.svg' %}">
+<link rel="preload" as="image" href="{% static 'svg/btn_view_collapse.svg' %}" imagesrcset="{% static 'svg/btn_view_collapse.svg' %}">
+<link rel="preload" as="image" href="{% static 'svg/btn_view_expand.svg' %}" imagesrcset="{% static 'svg/btn_view_expand.svg' %}">
+{% endblock %}
+
+{% block main %}
+<section x-data="{ 
+        open: false, 
+        openRegistrationModal: false,
+        filter: {}, 
+        layout: 
+            {% if request.session.layout|length > 0 %}
+                '{{ request.session.layout }}'
+            {% else %}
+                'list'
+            {% endif %}
+        }
+    "
+>
+    <div class='my-foot'>
+        <div class="wrapper">
+            <p>
+                Foot length: {{ foot.length }} cm, Foot Width: {{ foot.width }} cm, Circumference: {{ foot.circumference }} cm. Results {{ shoe_filter.qs.count }}.
+            </p>
+            <div class="results-options">
+                <div class="filter-btn" x-on:click=" open = ! open">Filters</div>
+                <div class="sort-options">
+                    <!-- <form class="sort"> -->
+                        {% include './sort.html' %}
+                    <!-- </form> -->
+                    <div 
+                        class="change-layout-btn" 
+                        hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                    >
+                        <img 
+                            src="{% static 'svg/icon_tiles.svg' %}"
+                            :class="layout == 'list' ? 'show' : 'hide'"
+                            x-on:click="layout = 'grid'"
+                            hx-post="{% url 'set_grid_layout' %}"
+                            hx-target=".none"
+                            hx-trigger="click"
+                        />
+                        <img 
+                            class="hide"
+                            src="{% static 'svg/icon_list.svg' %}"
+                            :class="layout == 'grid' ? 'show' : 'hide'"
+                            x-on:click="layout = 'list'"
+                            hx-post="{% url 'set_list_layout' %}"
+                            hx-target=".none"
+                            hx-trigger="click"
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% if user.is_anonymous %}
+        {% if request.session.confirmation_link_sent %}
+
+        {% else %}
+        <div class="save-measurements-btn">
+           Save your measurements! 
+            <button x-on:click="openRegistrationModal = true">Register now</button>
+        </div>
+        {% endif %}
+    {% endif %}
+    {% if user.is_authenticated and new_foot %}
+        <div class="save-measurements-btn">
+            Do you find this measurements more precise? 
+            <a href="{% url 'update_foot' %}">Update now</a>
+        </div>
+    {% endif %}
+    <div 
+        class="results" 
+        :class="layout == 'list' ? 'list-layout' : 'grid-layout'"
+    >
+        <div class="wrapper">
+            <form 
+                class="filter"
+                action="{% url 'results' %}"
+                method="GET"
+                :class="open ? 'filter-show' : ''"
+            >
+                <h3>
+                    Filters 
+                    <div class="close-filter" x-on:click="open = false">
+                        <img src="{% static 'svg/btn_clear_filter.svg' %}">
+                    </div>
+                </h3>
+                <div class="wrapper">
+                    {% include './filter.html' %}
+                </div>
+                <div class="filter-controls">
+                    <button type="button">
+                        <a href="{% url 'results' %}">Reset Filters</a>
+                    </button>
+                    <input type="submit" value="Filter" />
+                </div>
+            </form>
+            {% include './shoes.html' %}
+        </div>
+    </div>
+    {% if results.paginator.page_range|length > 1 %}
+    <div class="pagination">
+        <span class="step-links">
+            {% if results.has_previous %}
+            <div class="step-wrapper previous">
+                <a href="?page={{ results.previous_page_number }}">Previous</a>
+            </div>
+            {% endif %}
+            
+            {% if results.paginator.page_range|length > 1 %}
+            <div class="pages">
+                {% for page in results.paginator.page_range %}
+                    {% if page == results.number %}
+                    <div class="step-wrapper active-step">
+                        <a 
+                            href="?page={{ page }}" 
+                            class="page-number"
+                        >
+                            {{ page }}
+                        </a>
+                    </div>
+                    {% else %}
+                    <div class="step-wrapper">
+                        <a 
+                            href="?page={{ page }}" 
+                            class="page-number"
+                        >
+                            {{ page }}
+                        </a>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% if results.has_next %}
+            <div class="step-wrapper next">
+                <a href="?page={{ results.next_page_number }}">Next</a>
+            </div>
+            {% endif %}
+        </span>
+    </div>
+    {% endif %}
+    <div class="register" :class="openRegistrationModal ? 'show' : 'hide'">
+        <div class="close" x-on:click="openRegistrationModal = false">
+            <img src="{% static 'svg/btn_clear_filter.svg' %}">
+        </div>
+        <h4>
+            Save your measurements! Register an account.
+        </h4>
+        <form 
+            method="POST" 
+            action="{% url 'account_signup' %}"
+            class="email-wrapper"
+        >
+            {% csrf_token %}
+            <input 
+                type="email" 
+                name="email" 
+                placeholder="E-mail address" 
+                autocomplete="email" 
+                required="" 
+                id="id_email"
+            >
+            <input type="password" name="password1" placeholder="Password" autocomplete="new-password" required="" id="id_password1"> 
+            <input type="password" name="password2" placeholder="Password (again)" autocomplete="new-password" required="" id="id_password2">
+            <!-- <input type="hidden" name="subscribed" id="id_subscribed" :value="subscribe ? 'on' : ''"> -->
+            <button 
+                type="submit" 
+                name="button"
+            >
+                Register
+            </button>
+            <a href="{% url 'account_login' %}">Already registered?</a>
+        </form>
+    </div>  
+    <div class="blur" :class="openRegistrationModal ? 'show' : 'hide'"></div>
+</section>
+{% endblock %}

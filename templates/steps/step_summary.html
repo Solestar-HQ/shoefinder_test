@@ -1,0 +1,153 @@
+{% load static %}
+{% load compress %}
+
+<!-- <ul class="tabs">
+    <li 
+        class="finished"
+        hx-get="{% url 'shoe_finder' step='length' %}"
+        hx-push-url="true"
+        hx-trigger="click"
+        hx-target=".shoe-finder"
+    >
+        <div>1</div>
+        <span class="skewed-rectangle"></span>
+    </li>
+    <li 
+        class="finished"
+        hx-get="{% url 'shoe_finder' step='width' %}"
+        hx-push-url="true"
+        hx-trigger="click"
+        hx-target=".shoe-finder"
+    >
+        <div>2</div>
+        <span class="skewed-rectangle"></span>
+    </li>
+    <li 
+        class="finished"
+        hx-get="{% url 'shoe_finder' step='circumference' %}"
+        hx-push-url="true"
+        hx-trigger="click"
+        hx-target=".shoe-finder"    
+    >
+        <div>3</div>
+        <span class="skewed-rectangle"></span>
+    </li>
+</ul> -->
+<!-- <div class="summary">
+    <div class="wrapper">
+        <div>
+            <img eager src="{% static 'svg/length_small.svg' %}"/>
+            <div>Length</div>
+            <div>{{ foot.length }}<span>cm</span></div>
+        </div>
+        <div>
+            <img eager src="{% static 'svg/width_small.svg' %}"/>
+            <div>Width</div>
+            <div>{{ foot.width }}<span>cm</span></div>
+        </div>
+        <div>
+            <img eager src="{% static 'svg/circumference_small.svg' %}"/>
+            <div>Circumference</div>
+            <div>{{ foot.circumference }}<span>cm</span></div>
+        </div>
+    </div>
+</div> -->
+<div class="info">
+    <h2>
+        You did it! 
+    </h2>
+    <p>
+        Finally, make sure that you register an account to save your measurements.
+    </p>
+    <p>
+        This way you will always be able to come back and see all your matching shoes without needing to repeat the measuring procedure.
+    </p>
+    <div class="subscription" x-data="{ checked: false }">
+        <h4>
+            Save your measurements.
+        </h4>
+        <form 
+            method="POST" 
+            class="email-wrapper" 
+            x-data="{ showPasswordModal: false }"
+        >
+            {% csrf_token %}
+            <input 
+                type="email" 
+                name="email" 
+                placeholder="E-mail address" 
+                autocomplete="email" 
+                required="" 
+                id="id_email"
+                x-show="!showPasswordModal"
+            >
+            <div class="password-modal" x-show="showPasswordModal">
+                <input type="password" name="password1" placeholder="Password" autocomplete="new-password" required="" id="id_password1"> 
+                <input type="password" name="password2" placeholder="Password (again)" autocomplete="new-password" required="" id="id_password2">
+                <button 
+                    type="submit" 
+                    name="button"
+                >
+                    Save
+                </button>
+            </div>
+            <button 
+                type="button" 
+                name="button" 
+                x-on:click="showPasswordModal = true"
+                x-show="!showPasswordModal"
+            >
+                Register
+            </button>
+            <!-- <a href="/accounts/login/">Already registered?</a> -->
+        </form>
+        <div class="checkbox-wrapper">
+            <label>
+                <!-- <input type="checkbox" checked/> -->
+                <div class="checkbox" x-on:click="checked = ! checked">
+                    <img
+                        src="{% static 'svg/checkbox_off.svg' %}" 
+                        :class="checked ? 'hide' : 'show'"
+                    />
+                    <img 
+                        class="hide"
+                        class="checked"
+                        src="{% static 'svg/checkbox_on.svg' %}" 
+                        :class="checked ? 'show' : 'hide'" 
+                    />
+                </div>
+                Subscribe me to SOLESTAR's newsletter.
+            </label>
+        </div>
+    </div>
+</div>
+<div id="registration-confirmation"></div>
+<div class="show-results-btn-wrapper">
+    {% if step == 'summary' %}
+    {% csrf_token %}
+    <a id="show-results-btn" href="{% url 'results' %}">Show results</a> 
+    {% endif %}
+</div>
+{% if step_n != 4 %}
+<form class="controls" action="{% url 'results' %}" method="POST">
+    {% csrf_token %}
+    <!-- {{ form.as_p }} -->
+    <button
+        type="submit"
+        id="show-results-btn" 
+    >
+        Show results
+</button>
+</form>
+{% endif %}
+<!-- <div class="info">
+    <h3>
+        Du hast es geschafft!
+    </h3>
+    <p>
+        Auf dieser Seite kannst Du Deine Maße überprüfen. Falls sich bei der Eingabe ein Fehler eingeschlichen hat, kannst Du ihn noch einmal korrigieren. Tippe dazu einfach das Tab des entsprechended Schritts und gib das Korrekte Maß ein.
+    </p>
+    <p>
+       Drücke "Show Results" um Dir die perfekten Radschuhe für Dich anzeigen zu lassen.
+    </p>
+</div> -->

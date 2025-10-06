@@ -1,0 +1,73 @@
+<div class="shoes" :class="open ? 'hide' : ''">
+    {% if results|length == 0 %}
+    <div class="messages">
+        <p>Sorry, we couldn't find any matching shoes for you.</p>
+    </div>
+    {% else %}
+    {% for shoe in results %}
+    <!-- <div 
+        class='shoe' 
+        x-data="{ activeColor: {{ shoe.model.colors.first }} }"
+    > -->
+    <div 
+        class='shoe' 
+    >
+        <div 
+            class='image-wrapper' 
+            x-data="{ [{{ shoe.model.formatted }}]_loaded: false }"
+        >
+            <img 
+                id="{{ shoe.model.formatted }}-img" 
+                src="/media/{{ shoe.model.image }}"
+                onerror="
+                    this.src = '/media/images/image-placeholder.jpg'
+                    this.classList.add('blank-image');
+                    imageLoaded = true;
+                "
+                onload="this.classList.add('show')"
+            />
+            <div class="htmx-indicator spinner" id="{{ shoe.model.formatted }}-spinner"></div>
+            <!-- <img :src="'/media/' + images[color][angle]" data-src="" /> -->
+            <div class='color-options'>
+                {% for color in shoe.model.colors.all %}
+                    <!-- <div 
+                        class="color-option-{{ color.to_lower }}"
+                        x-on:click="color = {{ forloop.counter }}"
+
+                    > -->
+                    <div 
+                        class="color-option-{{ color.to_lower }}"
+                        hx-get="{% url 'get_model_color' model_name=shoe.model.formatted color=color %}"
+                        hx-trigger="click"
+                        hx-target="#{{ shoe.model.formatted }}-img"
+                        hx-swap="outerHTML"
+                        hx-indicator="#{{ shoe.model.formatted }}-spinner"
+                    >
+                    </div>
+                    <!-- </div> -->
+                {% endfor %}
+            </div>
+            <!-- <div class="controls">
+                <div 
+                    class="arrow-left"
+                    x-on:click=""
+                >
+                    left
+                </div>
+                <div 
+                    class="arrow-right"
+                    x-on:click="active + 1 < images.length ? active = active + 1 : active = 0"
+                >
+                    right
+                </div>
+            </div> -->
+        </div>
+        <div class='info-wrapper'>
+            <p style="font-weight: bold">{{ shoe.model.brand }}</p>
+            <p>{{ shoe.model }}</p>
+            <p>Size {{ shoe.size }}</p>
+        </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+</div>

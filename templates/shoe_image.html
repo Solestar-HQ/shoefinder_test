@@ -1,0 +1,11 @@
+
+<img 
+    id="{{ model }}-img" 
+    src="/media/{{ image_path }}"
+    class="show"
+    onerror="
+        this.src = '/media/images/image-placeholder.jpg'
+        this.classList.add('blank-image');
+        imageLoaded = true;
+    "
+/>

@@ -1,0 +1,39 @@
+<div class='shoe'>
+    <div 
+        class='image-wrapper'
+    >
+        <img :src="'/media/' + images[active]" />
+        <div class='color-options'>
+            {% for color in shoe.model.colors.all %}
+                <div 
+                    class="color-option-{{ color.to_lower }}"
+                    hx-get="{% url 'get_model_color' model=shoe.model color=color%}"
+                    hx-trigger="click"
+                    hx-target="shoe"
+                    hx-swap="innerHTML"
+                >
+                </div>
+            {% endfor %}
+        </div>
+        <div class="controls">
+            <div 
+                class="arrow-left"
+                x-on:click=""
+            >
+                left
+            </div>
+            <div 
+                class="arrow-right"
+                x-on:click="active + 1 < images.length ? active = active + 1 : active = 0"
+            >
+                right
+            </div>
+        </div>
+    </div>
+    <div class='info-wrapper'>
+        <p>{{ shoe.model.brand }}</p>
+        <p>{{ shoe.model }}</p>
+        <p>Size: {{ shoe.size }}</p>
+        <p>{{ shoe.price }}€</p>
+    </div>
+</div>

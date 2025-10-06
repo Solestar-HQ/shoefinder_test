@@ -1,0 +1,33 @@
+{% extends template %}
+
+{% load static %}
+{% load compress %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block links %}
+{% compress css %}
+<link type="text/x-scss" href="{% static 'scss/profile.scss' %}" rel="stylesheet" media="screen">
+{% endcompress %}
+{% endblock %}
+
+{% block main %}
+    <h1>Profile</h1>
+    <ul>
+        <!-- <li>
+            <a href="{% url 'account_logout' %}">
+                <svg>
+                    <use href="{% static 'svg/icon_logout.svg' %}#logout"></use>
+                </svg>
+                Log out
+            </a>
+        </li> -->
+        <li><a href="{% url 'change_email' %}">Change email address</a></li>
+        <li><a href="{% url 'account_change_password' %}">Change password</a></li>
+        <li><a href="{% url 'change_name' %}">Change name</a></li>
+        <li><a href="">Unsubscribe from the newsletter</a></li>
+        <li><a href="{% url 'delete_account' %}">Delete account</a></li>
+    </ul>
+{% endblock %}

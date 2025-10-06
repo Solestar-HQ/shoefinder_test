@@ -1,0 +1,38 @@
+{% load static %}
+
+<h3>
+    You did it! 
+</h3>
+<p>
+    Finally, make sure that you register an account to save your measurements. Just provide your email down below and press the register button. You will quickly recieve an email with a link to confirm your registration. 
+</p>
+<p>
+    This way you will always be able to come back and see all your matching shoes without needing to repeat the measuring procedure.
+</p>
+<div class="subscription">
+    <h4>
+        Save your measurements.
+    </h4>
+    <div class="email-wrapper">
+        <input type="text" placeholder="example@email.com">
+        <button type="button">Register</button>
+    </div>
+    <div class="checkbox-wrapper" x-data="{ checked: false }">
+        <label>
+            <!-- <input type="checkbox" checked/> -->
+            <div class="checkbox" x-on:click="checked = ! checked">
+                <img
+                    src="{% static 'svg/checkbox_off.svg' %}" 
+                    :class="checked ? 'hide' : 'show'"
+                />
+                <img 
+                    class="hide"
+                    class="checked"
+                    src="{% static 'svg/checkbox_on.svg' %}" 
+                    :class="checked ? 'show' : 'hide'" 
+                />
+            </div>
+            Subscribe me to SOLESTAR's newsletter.
+        </label>
+    </div>
+</div>

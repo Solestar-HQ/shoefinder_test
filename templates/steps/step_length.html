@@ -1,0 +1,103 @@
+{% load static %}
+{% load compress %}
+
+<ul class="tabs">
+    <li class="active">
+        <div>1</div>
+        <span class="skewed-rectangle"></span>
+    </li>
+    <li>
+        <div>2</div>
+        <span class="skewed-rectangle"></span>
+    </li>
+    <li>
+        <div>3</div>
+        <span class="skewed-rectangle"></span>
+    </li>
+</ul>
+<div class="illustrations">
+    <div class="wrapper">
+        <img src="{% static 'svg/length.svg' %}">
+    </div>
+</div>
+<form class="controls">
+    <div class="wrapper">
+        {% csrf_token %}
+        <div style="width: 2.5rem;"></div>
+        <!-- <label style="width: 2.5rem">My foot length</label> -->
+        <div class="value input">
+            <div 
+                class="input-wrapper"
+                x-data="{ 
+                    inputValue: parseFloat({{ input_value }}).toFixed(1) 
+                }"
+            >
+                <label>My foot length</label>
+                <input
+                name="{{ step }}"
+                x-model="inputValue"
+                type="number"
+                type="text"
+                step="0.1"
+                autofocus
+                min="0"
+                @keydown.enter="$refs.next.click()"
+                x-init="$watch('inputValue', (value) => {
+                    if (value < 0) value = 0.0;
+                    if (value.length > 4) value = value.slice(0, 4);
+                    if (value < 1) {
+                        value = String(value).slice(value.length - 1, value.length);
+                    }
+                    if (value > 99 && value.length < 4) {
+                        value = parseFloat(
+                            String(value).slice(0, 2) + '.' + String(value).slice(2, 3)
+                        );
+                    } else if (value > 99) {
+                        value = parseFloat(
+                            String(value).slice(1, 3) + '.' + String(value).slice(3, 4)
+                        );
+                    } else if (value < 99 && value.length < 4) {
+                        if (String(value).slice(0, 1) == 0) {
+                            value = parseFloat(String(value).slice(1, value.length));
+                        }
+                    } else if (value < 10 && value.length > 3) {
+                        value = parseFloat(
+                            String(value).slice(0, 3)
+                        );
+                    }
+                    inputValue = value;
+                })"
+            />
+                <span class="cm">cm</span>
+            </div>
+        </div>
+        <img 
+            eager
+            src="{% static 'svg/btn_next.svg' %}" 
+            hx-post="{% url 'shoe_finder' step='width' %}"
+            hx-include="input[name=length]"
+            hx-push-url="true"
+            hx-trigger="click"
+            hx-target=".shoe-finder"
+            hx-swap="innerHTML"
+        />
+    </div>
+</form>
+<ul class="messages">
+    {% for message in messages %}
+    {% if message.tags == 'shoe_finder error' %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endif %}
+    {% endfor %}
+</ul>
+<div class="info">
+    <h3>
+        Determining your foot length:
+    </h3>
+    <p>
+        To determine your foot length, find a spot on a wall with a flat surface. Place a ruler or tape measure with the '0cm' mark flush against the wall. Now stand with your heel barefoot against the wall so that it corresponds to the '0' mark on the tape measure or ruler. Without moving your foot, read the longest distance on the tape measure, which corresponds to the longest toe. Now you have determined the length of your foot.
+    </p>
+    <p>
+        Measure the right and the left foot. If the result is different, please note the larger value in cm.
+    </p>
+</div>

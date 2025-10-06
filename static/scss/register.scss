@@ -1,0 +1,230 @@
+$old-black:	#181a16;	
+$black:	#121212;
+$white:	#f2f2f0;
+$red: #d92b31;
+$gray:	#91918f;
+
+.blur {
+    display: none;
+    background-color: rgba(256, 256, 256, 0.7);
+    backdrop-filter: blur(2px);
+    position: fixed;
+    top: 0;
+    height: 100%;
+    overflow-y: hidden;
+    width: 100%;
+    z-index: 100;
+
+
+    &.show {
+        display: flex !important;
+    }
+}
+
+.register {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 1rem;
+    background-color: white;
+    position: absolute;
+    top: 234px;
+    left: 0;
+    right: 0;
+    z-index: 300;
+    border: 1px solid $black;
+    max-width: 317px !important;
+    margin: 0 auto;
+
+    &.show {
+        display: flex !important;
+    }
+
+    h4 {
+        font-size: 24px;
+        text-align: center;
+        margin-top: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        input {
+            text-align: center;
+        }
+    }
+
+    a {
+        color: rgba(0, 0, 0, 0.75);
+        cursor: pointer;
+        font-size: 0.8rem;
+        letter-spacing: 1px;
+        text-decoration: underline;
+        text-underline-offset: 4px;
+        margin-top: 1rem;
+    
+        &:hover {
+            color: $black;
+            text-decoration-thickness: 2px;
+        }
+    }
+
+    .close {
+        position: absolute;
+        top: 2px;
+        right: 2px;
+
+        img {
+            border: 1px solid $black;
+            cursor: pointer;
+            height: 1.5rem;
+            transition: all 300ms;
+
+            &:hover {
+                transform: scale(1.1);
+            }
+        }
+    }
+
+    .checkbox-wrapper {
+        display: flex;
+        flex-direction: row;
+    }
+
+    input[type="text"] {
+        border: 1px solid $black;
+        padding: 0.5rem 1rem;
+        min-width: 250px;
+    }
+
+    input {
+        border: 1px solid rgba(0,0,0,0.3);
+        border-radius: 0px;
+        font-size: 18px;
+        font-weight: 300;
+        padding: 0.5rem;
+        outline: none;
+        margin-bottom: 1rem;
+        width: 100%;
+
+        &:focus {
+            border-radius: none;
+            outline: 2px solid $black;
+            outline-offset: -1px;
+        }
+    }
+
+    input[type="checkbox"] {
+        filter: invert(100%) hue-rotate(210deg) brightness(1.7);
+    }
+
+    label {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        font-size: 14px;
+        // margin-top: 1rem;
+
+        input {
+            height: 1rem;
+            // margin-right: 0.5rem;
+            width: 1rem;
+        }
+
+        &:last-of-type {
+            // margin-left: 1rem;
+        }
+    }
+    
+    .checkbox-wrapper {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin-top: 0.5rem;
+
+        label {
+            font-weight: 300;
+            text-align: left;   
+        }
+
+        .checkbox {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            height: 1.5rem;
+            width: 1.5rem;
+            margin-right: 0.5rem;
+            position: relative;
+
+            &:hover > .checked.hide {
+                opacity: 0.3;
+                z-index: 10;
+            }
+
+            img {
+                height: 1.25rem;
+            }
+
+            .hide {
+                display: none;
+            }
+
+            .show {
+                display: block !important;
+            }
+
+            .checked {
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+        }
+
+        input {
+            height: 1.5rem;
+            width: 1.5rem;
+        }
+
+        .hidden-checkbox {
+            display: none;
+        }
+    }
+
+    button {
+        background-color: $black;
+        border: 1px solid $black;
+        color: $white;
+        cursor: pointer;
+        font-size: 18px;
+        font-weight: bold;
+        margin-top: 1rem;
+        min-height: 35px;;
+        padding: 0.5rem 1rem;
+        transition: all 300ms;
+        width: 200px;
+
+        &:hover {
+            box-shadow: 0 0 0 1px $black;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+            text-decoration-thickness: 2px;
+        }
+    }
+
+    &.show {
+        display: flex !important;
+    }
+}
+
+@media only screen and (min-width: 729px) {
+    .register {
+        display: none !important;
+    }
+}
